@@ -1,0 +1,44 @@
+#!/bin/sh
+
+instanceparam=;
+cmdstr=;
+ipcount=0;
+
+for line in `cat /opt/data/tools/multiTail/apps.conf`
+do
+   flag=`echo $line | grep -q $1 && echo "includea" || echo "includeb"`;
+   if [ "$flag" = "includea" ];then 
+      instanceparam=`echo $line | awk -F ',' '{print $1 " " $2}'`;
+      echo $instanceparam;
+   fi
+   
+done
+
+ipstr=`java -jar /opt/data/tools/multiTail/getInstancelist.jar $instanceparam`;
+echo $ipstr;
+OLD_IFS=”$IFS”
+IFS=”,”
+arr=($ipstr)
+IFS=”$OLD_IFS”
+
+echo "instance ips bellow:"
+for ip in ${arr[@]}
+  do
+    ipcount=`expr $ipcount + 1`;
+    echo $ip;
+    if [ $ipcount -gt 1 ]; then
+       cmdstr=$cmdstr";";
+    fi
+    cmdstr=$cmdstr"ssh "$1"@"$ip" 'tail -f /opt/logs/access_$1.log'";
+  done
+echo $ipcount;
+echo $cmdstr;
+
+
+
+cmd="ssh 10237@10.10.41.155 'tail -f /opt/logs/access_10237.log';ssh 10237@10.10.40.143 'tail -f /opt/logs/access_10237.log';ssh 10237@10.10.40.153 'tail -f /opt/logs/access_10237.log';ssh 10237@10.10.40.166 'tail -f /opt/logs/access_10237.log';ssh 10237@10.16.25.158 'tail -f /opt/logs/access_10237.log'"
+
+eval $cmdstr 
+#ssh 10237@10.10.41.155 "tail -f /opt/logs/access_10237.log";ssh 10237@10.10.40.143 "tail -f /opt/logs/access_10237.log";ssh 10237@10.10.40.153 "tail -f /opt/logs/access_10237.log";ssh 10237@10.10.40.166 "tail -f /opt/logs/access_10237.log";ssh 10237@10.16.25.158 "tail -f /opt/logs/access_10237.log"
+
+

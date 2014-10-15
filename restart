@@ -1,0 +1,73 @@
+#!/bin/bash
+#!/bin/myservice
+#!/bin/kill
+
+echo "restarting " $1 " ....";
+
+$tomcat;
+$signal;
+
+if [ "${1}" = "test" ] ;then
+
+tomcat="/opt/data/tomcat7/";
+signal=`ps axu | grep /opt/data/tomcat7/ | grep -v grep | awk '{print $2}'`;
+echo "killing $tomcat in test environment,pid:" $signal;
+kill -9 ${signal};
+/sbin/service tomcat7 start;
+
+
+elif [ "${1}" = "qa" ]; then
+
+tomcat="/opt/data/tomcat7_2";
+signal=`ps axu | grep tomcat7_2 | grep -v grep | awk '{print $2}'`;
+echo "killing $tomcat in qa environment,pid:" $signal;
+
+kill -9 ${signal};
+/sbin/service tomcat7_2 start;
+
+elif [ "${1}" = "jobs" ]; then
+
+tomcat="/opt/data/tomcat7_jobs";
+signal=`ps axu | grep tomcat7_jobs | grep -v grep | awk '{print $2}'`;
+echo "killing $tomcat in jobs environment,pid:" $signal;
+
+kill -9 ${signal};
+/sbin/service tomcat7_jobs start;
+
+
+else
+   
+echo "param err";
+fi
+echo "restart "  $1 " successful!";
+
+echo "the following is " $1 " starting log:"
+echo "";
+echo "";
+echo "******************************************************"
+logpath=$tomcat"/logs/catalina.out";
+logflag="true";
+logline=;
+sleep 10;
+#while(("$logflag"=="true"))
+#do
+#  logline=`tail -1 $logpath`;
+#  icf=`echo "$logline" | grep -q 'Server startup in' && echo "include" || echo "not"`;
+#  if [ "$icf" = "include" ]; then
+#     break;
+#  fi
+#  sleep 0.1;
+#done
+
+echo "";
+echo "";
+echo "******************************************************"
+
+#sleep 10;
+
+tail -n200 $logpath;
+
+
+echo "正在退出。。。。。。。"
+
+
