@@ -1,11 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import os,time,sys
+import os,time,sys,datetime
 
 def printHelp():
     print "python scelog.py tail $appid  -- 实时查看log"
     print "python scelog.py help  -- 查看帮助"
     print "python scelog.py cp $appid  -- 把stdout_$ppid.log文件下载到当前目录下scelog_tmp文件夹中"
+    print "python scelog.py cpy $appid  -- 把把实例上昨天的stdout日志文件下载到当前目录下scelog_tmp文件夹中"
 
 argLen = len(sys.argv)
 if argLen != 3:
@@ -28,6 +29,18 @@ def copyLog():
         os.popen("scp %s@%s:/opt/logs/stdout_%s.log %s" % (appid, ip, appid, localLog))
         #os.popen("cat %s >> %s" % (localLog, logfile))
         #os.popen("rm %s" % localLog)
+
+def copyYesterdayLog():
+    '''
+    将sce上的stout_$appid.log文件下载到当前目录下的scelog_tmp文件夹中, 多个实例的文件用序号区分：0.log,1.log
+    '''
+    today = datetime.date.today();
+    yesterday = "%s-%s-%s" % (today.year, today.month, today.day - 1)
+    tmpDir = os.path.abspath(os.curdir) + "/scelog_tmp_%s" % yesterday
+    os.popen("mkdir scelog_tmp_%s" % yesterday)
+    for idx, ip in enumerate(ipsArr):
+        localLog = "%s/%s.log" % (tmpDir, idx)
+        os.popen("scp %s@%s:/opt/logs/stdout_%s.log.%s %s" % (appid, ip, appid, yesterday, localLog))
 
 def tailLog():
     '''
@@ -79,5 +92,7 @@ if action == 'cp':
     copyLog();
 elif action == 'tail':
     tailLog()
+elif action == 'cpy':
+    copyYesterdayLog()
 else:
     printHelp()
