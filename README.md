@@ -17,7 +17,8 @@ python scelog.py login $appid  -- 登录到实例上
 
 可以设置alias scelog = "/path/to/scelog/scelog.py"后直接使用:`scelog tail $appid`的方式更简单
 
-44上已经添加alias, 登录４４使用方式如下：
+## 在44上使用：
+44上已经添加alias, 登录44使用方式如下：
 
 ```sh
 scelog tail $appid  -- 实时查看log
@@ -30,3 +31,6 @@ scelog ip $appid  -- 查看各实例ip
 scelog login $appid  -- 登录到实例上
 
 ```
+
+对于新开scelog应用，需要在`/home/mdev/.sceapp/app.conf`添加行配置，格式为：`$appid,$app_secret`
+![](http://dcimg.f.itc.cn/app/fa/fa04f8437cb8c391f79ad61c60e6c339.png)
