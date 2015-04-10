@@ -76,7 +76,7 @@ def tailLog():
         if idx > 0:
             os.popen(splitWinCmd)
         cmd = "tail -f -n 100 /opt/logs/stdout_%s.log" % appid
-        os.popen("tmux send-keys -t %s:0.%s 'ssh %s@%s %s' C-m" % (sessionName, idx, appid, ip, cmd))
+        os.popen("tmux send-keys -t %s:appwin.%s 'ssh %s@%s %s' C-m" % (sessionName, idx, appid, ip, cmd))
     os.popen(layoutCmd)
     os.popen("tmux attach -t %s" % sessionName)
 
@@ -116,7 +116,7 @@ def cdlog():
         if idx > 0:
             os.popen(splitWinCmd)
         #cmd = "cd /opt/logs"
-        os.popen("tmux send-keys -t %s:0.%s 'ssh %s@%s %s' C-m" % (sessionName, idx, appid, ip, cmd))
+        os.popen("tmux send-keys -t %s:appwin.%s 'ssh %s@%s %s' C-m" % (sessionName, idx, appid, ip, cmd))
         #os.popen("tmux send-keys -t %s:0.%s '%s' C-m" % (sessionName, idx, cmd))
     os.popen(layoutCmd)
     os.popen("tmux attach -t %s" % sessionName)
