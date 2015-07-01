@@ -33,4 +33,3 @@ scelog login $appid  -- 登录到实例上
 ```
 
 对于新开的scelog应用，需要在`/home/mdev/.sceapp/app.conf`文件最后添加一行配置，格式为：`$appid,$app_secret`
-![](http://dcimg.f.itc.cn/app/fa/fa04f8437cb8c391f79ad61c60e6c339.png)
